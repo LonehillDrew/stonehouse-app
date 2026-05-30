@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Stonehouse Café — Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ───────────────────────────────── */
+:root{
+  --bg:        #f7f4ef;
+  --surface:   #ffffff;
+  --surface2:  #f0ede6;
+  --ink:       #1a1612;
+  --ink2:      #4a4540;
+  --ink3:      #8a8278;
+  --gold:      #b8922a;
+  --gold-bg:   #fdf5e4;
+  --green:     #2c4a22;
+  --green-bg:  #eef4eb;
+  --border:    #e2ddd5;
+  --border2:   #cfc9bf;
+  --red:       #c0392b;
+  --r:         12px;
+  --r-sm:      8px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+
+/* ── COVER ────────────────────────────────── */
+#coverPage{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:#141210;position:relative;overflow:hidden;padding:32px 20px;
+}
+#coverPage::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 65% 40%,rgba(184,146,42,.13) 0%,transparent 55%),
+             radial-gradient(ellipse at 20% 75%,rgba(44,74,34,.2) 0%,transparent 50%);
+}
+.cv-frame{
+  position:relative;z-index:1;
+  border:1px solid rgba(184,146,42,.25);
+  padding:clamp(32px,7vw,56px) clamp(28px,8vw,72px);
+  text-align:center;max-width:480px;width:100%;
+}
+.cv-frame::before,.cv-frame::after{
+  content:'';position:absolute;width:18px;height:18px;
+  border-color:var(--gold);border-style:solid;opacity:.6;
+}
+.cv-frame::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+.cv-frame::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+.cv-est{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:rgba(184,146,42,.6);font-weight:500;margin-bottom:20px;}
+.cv-logo{font-family:'Playfair Display',serif;font-size:clamp(44px,11vw,68px);font-weight:700;color:#f5f0e8;line-height:1;letter-spacing:-1px;}
+.cv-logo em{color:var(--gold);font-style:normal;}
+.cv-tagline{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(14px,4vw,18px);color:rgba(255,255,255,.35);margin:8px 0 28px;font-weight:400;}
+.cv-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:32px;}
+.cv-pill{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 10px;}
+.cv-btn{
+  background:var(--gold);color:#141210;border:none;border-radius:6px;
+  padding:14px 36px;font-family:'Inter',sans-serif;font-size:12px;
+  font-weight:600;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;
+  transition:all .2s;box-shadow:0 4px 20px rgba(184,146,42,.35);display:inline-flex;align-items:center;gap:8px;
+}
+.cv-btn:hover{background:#cc a83a;transform:translateY(-1px);box-shadow:0 6px 28px rgba(184,146,42,.45);}
+.cv-footer{margin-top:24px;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:1px;}
+
+/* ── APP SHELL ────────────────────────────── */
+#app{display:none;flex-direction:column;min-height:100vh;}
+#app.open{display:flex;}
+
+/* ── BOTTOM TAB BAR ───────────────────────── */
+.tabbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:var(--ink);border-top:1px solid rgba(255,255,255,.07);
+  display:flex;padding-bottom:env(safe-area-inset-bottom,0);
+  box-shadow:0 -4px 20px rgba(0,0,0,.25);
+}
+.tb-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:10px 4px 12px;cursor:pointer;
+  border:none;background:none;gap:3px;transition:opacity .15s;
+  position:relative;
+}
+.tb-icon{font-size:22px;line-height:1;}
+.tb-label{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);font-family:'Inter',sans-serif;transition:color .2s;}
+.tb-item.active .tb-label{color:var(--gold);}
+.tb-badge{
+  position:absolute;top:7px;right:calc(50% - 18px);
+  background:var(--gold);color:#141210;font-size:9px;font-weight:700;
+  border-radius:10px;padding:1px 5px;min-width:16px;text-align:center;
+  display:none;font-family:'Inter',sans-serif;
+}
+.tb-badge.show{display:block;}
+
+/* ── PAGES ────────────────────────────────── */
+.pages{flex:1;padding-bottom:62px;}
+.page{display:none;min-height:calc(100vh - 62px);animation:pgIn .25s ease;}
+.page.active{display:block;}
+@keyframes pgIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── TOP BAR (shared) ─────────────────────── */
+.topbar{
+  background:var(--ink);padding:14px 16px;display:flex;
+  align-items:center;gap:12px;position:sticky;top:0;z-index:100;
+}
+.topbar-back{
+  background:none;border:none;color:var(--gold);cursor:pointer;
+  font-size:13px;font-weight:500;display:flex;align-items:center;gap:5px;
+  font-family:'Inter',sans-serif;padding:4px 0;flex-shrink:0;white-space:nowrap;
+}
+.topbar-back svg{width:16px;height:16px;fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.topbar-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#f5f0e8;flex:1;}
+.topbar-icon{font-size:20px;}
+
+/* ── HOME PAGE ────────────────────────────── */
+.home-header{background:var(--ink);padding:20px 16px 24px;text-align:center;position:relative;overflow:hidden;}
+.home-header::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 50%,rgba(184,146,42,.1) 0%,transparent 60%);}
+.home-logo{font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,38px);font-weight:700;color:#f5f0e8;position:relative;z-index:1;letter-spacing:-.5px;}
+.home-logo em{color:var(--gold);font-style:normal;}
+.home-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:4px;position:relative;z-index:1;}
+
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);}
+@media(min-width:480px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:720px){.cat-grid{grid-template-columns:repeat(4,1fr);}}
+
+.cat-card{
+  background:var(--surface);padding:20px 12px 18px;display:flex;
+  flex-direction:column;align-items:center;gap:8px;cursor:pointer;
+  transition:background .15s;text-align:center;min-height:100px;
+  border:none;width:100%;
+}
+.cat-card:hover,.cat-card:active{background:#f5f2ec;}
+.cat-emoji{font-size:28px;line-height:1;}
+.cat-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink);line-height:1.2;}
+.cat-count{font-size:10px;color:var(--ink3);font-weight:400;}
+
+/* ── SECTION PAGE ─────────────────────────── */
+.search-bar{background:var(--surface);padding:10px 16px;border-bottom:1px solid var(--border);position:sticky;top:53px;z-index:99;}
+.search-inner{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 13px;max-width:700px;margin:0 auto;}
+.search-inner input{border:none;background:none;outline:none;font-family:'Inter',sans-serif;font-size:13px;color:var(--ink);flex:1;min-width:0;}
+.search-inner input::placeholder{color:var(--ink3);}
+.search-icon{font-size:14px;color:var(--ink3);flex-shrink:0;}
+
+.section-hero{padding:22px 16px 18px;border-bottom:1px solid var(--border);max-width:700px;margin:0 auto;}
+.section-hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,36px);font-weight:700;color:var(--ink);}
+.section-hero p{font-size:13px;color:var(--ink3);margin-top:4px;font-style:italic;}
+.section-rule{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.section-rule span{flex:1;max-width:50px;height:1px;background:var(--gold);opacity:.5;}
+.section-rule i{font-size:8px;color:var(--gold);opacity:.7;font-style:normal;}
+
+.sub-label{
+  padding:12px 16px 8px;
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--ink3);font-weight:600;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  max-width:700px;margin:0 auto;
+  display:block;
+}
+
+/* ── MENU ITEM ROW ────────────────────────── */
+.mrow{
+  display:flex;align-items:flex-start;padding:14px 16px;
+  border-bottom:1px solid var(--border);gap:12px;
+  background:var(--surface);transition:background .12s;
+  max-width:700px;margin:0 auto;
+}
+.mrow:hover{background:#fdfbf7;}
+.mrow.in-cart{background:var(--green-bg);}
+.mrow-body{flex:1;min-width:0;}
+.mrow-name-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px;}
+.mrow-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);line-height:1.25;}
+.mrow.in-cart .mrow-name{color:var(--green);}
+.mrow-desc{font-size:12.5px;color:var(--ink3);line-height:1.55;font-style:italic;}
+.mrow-note{font-size:11px;color:var(--gold);margin-top:3px;font-style:normal;font-weight:500;}
+.tag{font-size:9px;padding:1px 6px;border-radius:3px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;font-family:'Inter',sans-serif;flex-shrink:0;}
+.tag-v{background:rgba(44,74,34,.1);color:var(--green);border:1px solid rgba(44,74,34,.2);}
+.tag-popular{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(184,146,42,.25);}
+.tag-spicy{background:#fef0ec;color:#c0392b;border:1px solid rgba(192,57,43,.2);}
+
+.mrow-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;padding-top:1px;}
+.mrow-price{font-size:15px;font-weight:700;color:var(--ink);font-family:'Inter',sans-serif;white-space:nowrap;}
+
+.qty-ctrl{display:flex;align-items:center;gap:6px;}
+.qbtn{
+  width:26px;height:26px;border-radius:var(--r-sm);
+  border:1.5px solid var(--border2);background:var(--surface);
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;color:var(--ink);transition:all .12s;line-height:1;
+}
+.qbtn:hover{background:var(--gold);border-color:var(--gold);color:#fff;}
+.qbtn:active{transform:scale(.92);}
+.qbtn.add{background:var(--green);border-color:var(--green);color:#fff;}
+.qbtn.add:hover{background:#3a6030;}
+.qnum{font-weight:700;font-size:14px;min-width:16px;text-align:center;color:var(--ink);font-family:'Inter',sans-serif;}
+
+.no-results{text-align:center;padding:52px 20px;color:var(--ink3);}
+.no-results h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);margin-bottom:6px;}
+.no-results p{font-size:13px;}
+
+/* ── ORDER PAGE ───────────────────────────── */
+.order-wrap{max-width:600px;margin:0 auto;padding:16px 16px 32px;}
+
+.order-empty{text-align:center;padding:56px 20px;}
+.order-empty-icon{font-size:52px;opacity:.35;margin-bottom:16px;}
+.order-empty h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);margin-bottom:8px;}
+.order-empty p{font-size:13px;color:var(--ink3);line-height:1.6;}
+.btn-ghost{
+  margin-top:20px;display:inline-flex;align-items:center;gap:6px;
+  background:var(--ink);color:var(--gold);border:none;border-radius:var(--r-sm);
+  padding:12px 24px;font-size:11px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s;
+}
+.btn-ghost:hover{background:#2a2010;}
+
+/* Save order form */
+.save-form-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:16px;}
+.save-form-title{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;}
+.form-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.form-row:last-of-type{margin-bottom:0;}
+.form-label{font-size:11px;font-weight:600;color:var(--ink2);letter-spacing:.5px;}
+.form-input{
+  background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);
+  padding:10px 13px;font-size:13px;font-family:'Inter',sans-serif;color:var(--ink);
+  outline:none;transition:border-color .2s;width:100%;
+}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--ink3);}
+
+/* Order lines */
+.order-lines-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px;}
+.order-line{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);gap:10px;}
+.order-line:last-child{border-bottom:none;}
+.ol-info{flex:1;min-width:0;}
+.ol-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:1px;}
+.ol-unit{font-size:11px;color:var(--ink3);}
+.ol-sub{font-weight:700;font-size:13px;min-width:54px;text-align:right;font-family:'Inter',sans-serif;color:var(--ink);}
+
+.totals-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:16px;}
+.total-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink3);margin-bottom:8px;font-family:'Inter',sans-serif;}
+.total-grand{display:flex;justify-content:space-between;font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:var(--ink);padding-top:12px;margin-top:4px;border-top:1px solid var(--border);}
+.total-grand span:last-child{color:var(--green);}
+
+/* Action buttons */
+.actions-row{display:flex;flex-direction:column;gap:10px;}
+.btn-primary{width:100%;background:var(--green);color:#fff;border:none;border-radius:var(--r-sm);padding:15px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .2s;box-shadow:0 4px 14px rgba(44,74,34,.3);}
+.btn-primary:hover{background:#3a6030;}
+.btn-danger{width:100%;background:none;color:var(--red);border:1.5px solid rgba(192,57,43,.25);border-radius:var(--r-sm);padding:12px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-danger:hover{background:#fff0ef;border-color:var(--red);}
+
+/* ── RECEIPT PAGE ─────────────────────────── */
+.receipt-page-wrap{max-width:440px;margin:0 auto;padding:20px 16px 40px;}
+
+.receipt-paper{
+  background:#fff;
+  box-shadow:0 2px 20px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);
+  border-radius:4px;overflow:hidden;margin-bottom:18px;
+}
+.receipt-foil{height:5px;background:repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 12px,#f5e9c0 12px,#f5e9c0 16px,var(--gold) 16px,var(--gold) 18px,transparent 18px,transparent 22px);}
+.receipt-head{padding:22px 22px 18px;text-align:center;border-bottom:1px dashed var(--border);}
+.r-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.5px;}
+.r-logo em{color:var(--gold);font-style:normal;}
+.r-est{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--ink3);display:block;margin-top:2px;font-family:'Inter',sans-serif;}
+.r-divider{width:36px;height:1px;background:var(--gold);margin:12px auto;opacity:.5;}
+.r-order-no{font-size:13px;font-weight:700;color:var(--ink);letter-spacing:.5px;font-family:'Inter',sans-serif;}
+.r-datetime{font-size:11px;color:var(--ink3);margin-top:2px;font-family:'Inter',sans-serif;}
+.r-customer{font-size:12px;color:var(--ink2);margin-top:6px;font-family:'Inter',sans-serif;font-style:italic;}
+
+.receipt-items{padding:14px 22px;border-bottom:1px dashed var(--border);}
+.r-col-head{display:grid;grid-template-columns:1fr 36px 62px;gap:6px;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:4px;font-family:'Inter',sans-serif;}
+.r-col-head span:nth-child(2),.r-col-head span:nth-child(3){text-align:right;}
+.r-item{display:grid;grid-template-columns:1fr 36px 62px;gap:6px;align-items:baseline;padding:8px 0;border-bottom:1px dotted rgba(0,0,0,.07);}
+.r-item:last-child{border-bottom:none;}
+.r-iname{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;}
+.r-iqty{font-size:12px;color:var(--ink3);text-align:right;font-family:'Inter',sans-serif;}
+.r-iamt{font-size:13px;font-weight:600;color:var(--ink);text-align:right;font-family:'Inter',sans-serif;}
+
+.receipt-total{padding:14px 22px;border-bottom:1px dashed var(--border);}
+.r-trow{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3);margin-bottom:8px;font-family:'Inter',sans-serif;}
+.r-grand{display:flex;justify-content:space-between;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);padding-top:10px;border-top:1px solid var(--border);}
+.r-grand span:last-child{color:var(--green);}
+
+.receipt-foot{padding:16px 22px 20px;text-align:center;}
+.receipt-foot p{font-size:12px;color:var(--ink3);line-height:1.6;font-style:italic;font-family:'Playfair Display',serif;}
+.receipt-hashtag{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-top:8px;display:block;font-family:'Inter',sans-serif;}
+
+.receipt-tear{height:12px;background:radial-gradient(circle at top,var(--bg) 7px,#fff 7px);background-size:20px 12px;background-position:bottom;background-repeat:repeat-x;margin-top:-1px;}
+
+.counter-box{background:var(--ink);border-radius:var(--r);padding:18px 20px;text-align:center;margin-bottom:14px;}
+.counter-box .cb-icon{font-size:28px;margin-bottom:8px;}
+.counter-box h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold);margin-bottom:6px;}
+.counter-box p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.7;font-family:'Inter',sans-serif;}
+.btn-new-order{width:100%;background:var(--gold);color:#141210;border:none;border-radius:var(--r-sm);padding:14px;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+.btn-new-order:hover{background:#cca83a;}
+
+/* ── TOAST ────────────────────────────────── */
+.toast{
+  position:fixed;top:14px;left:50%;
+  transform:translateX(-50%) translateY(-70px);
+  background:var(--ink);color:#fff;padding:10px 20px;border-radius:40px;
+  font-size:12px;font-weight:500;z-index:999;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;border:1px solid rgba(184,146,42,.3);
+  box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none;
+  font-family:'Inter',sans-serif;letter-spacing:.3px;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ── DIVIDER helper ───────────────────────── */
+.section-divider{height:8px;background:var(--bg);}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div id="coverPage">
+  <div class="cv-frame">
+    <div class="cv-est">Est. 2019 · Hillcrest, KwaZulu-Natal</div>
+    <div class="cv-logo">Stone<em>house</em></div>
+    <div class="cv-tagline">The Café</div>
+    <div class="cv-pills">
+      <span class="cv-pill">All Day Breakfast</span>
+      <span class="cv-pill">Burgers</span>
+      <span class="cv-pill">Waffles</span>
+      <span class="cv-pill">Coffee</span>
+      <span class="cv-pill">Kids Welcome</span>
+    </div>
+    <button class="cv-btn" onclick="APP.openMenu()">View Menu &rarr;</button>
+    <div class="cv-footer">#GoodForKids &nbsp;·&nbsp; Service with a Smile</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="pages">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="home-header">
+        <div class="home-logo">Stone<em>house</em></div>
+        <div class="home-sub">The Café · Full Menu</div>
+      </div>
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+
+    <!-- SECTION -->
+    <div class="page" id="page-section">
+      <div class="topbar" id="sectionTopbar">
+        <button class="topbar-back" onclick="APP.goHome()">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Menu
+        </button>
+        <div class="topbar-title" id="secTitle">Section</div>
+        <div class="topbar-icon" id="secIcon">🍳</div>
+      </div>
+      <div class="search-bar">
+        <div class="search-inner">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search this section…" oninput="APP.search(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+      </div>
+      <div id="sectionBody"></div>
+    </div>
+
+    <!-- ORDER -->
+    <div class="page" id="page-order">
+      <div class="topbar">
+        <div class="topbar-title">Your Order</div>
+        <div class="topbar-icon" id="orderCountLabel"></div>
+      </div>
+      <div class="order-wrap" id="orderWrap"></div>
+    </div>
+
+    <!-- RECEIPT -->
+    <div class="page" id="page-receipt">
+      <div class="topbar">
+        <div class="topbar-title">Order Slip</div>
+      </div>
+      <div class="receipt-page-wrap" id="receiptWrap"></div>
+    </div>
+
+  </div>
+
+  <!-- TAB BAR -->
+  <nav class="tabbar">
+    <button class="tb-item active" id="tab-home" onclick="APP.tab('home',this)">
+      <span class="tb-icon">🍽️</span>
+      <span class="tb-label">Menu</span>
+    </button>
+    <button class="tb-item" id="tab-section" onclick="APP.tab('section',this)" style="display:none">
+      <span class="tb-icon" id="tab-sec-icon">🍳</span>
+      <span class="tb-label" id="tab-sec-label">Browse</span>
+    </button>
+    <button class="tb-item" id="tab-order" onclick="APP.tab('order',this)">
+      <span class="tb-icon">🛒</span>
+      <span class="tb-label">Order</span>
+      <span class="tb-badge" id="cartBadge">0</span>
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════ */
+const SECTIONS=[
+  {key:'breakfast',name:'Breakfast',icon:'🍳',desc:'Served all day, every day',
+   sub:[
+    {label:null,items:[
+      {id:'b1', name:'Café Breakfast',          price:80,  desc:'Choice of scrambled or 2 fried eggs, 2 rashers of bacon, toast & grilled tomato.',tags:[]},
+      {id:'b2', name:'Smashed Avo',             price:90,  desc:'On toast with danish feta, wild rocket, biltong sprinkles & balsamic glaze.',tags:['v'],note:'Add bacon +R35'},
+      {id:'b3', name:'Mushroom Breakfast',       price:105, desc:'2 eggs, grilled mushrooms, grilled tomato, toast & your choice of bacon or chicken strips.',tags:[]},
+      {id:'b4', name:'Creamy Mushrooms',         price:115, desc:'Toast topped with sautéed mushrooms in creamy garlic sauce, wild rocket & parmesan.',tags:['v'],note:'Add avo +R30'},
+      {id:'b5', name:'Mince On Toast',           price:100, desc:'Two slices of toast with savoury mince, 2 fried eggs, grilled tomato & wild rocket.',tags:['popular']},
+      {id:'b6', name:'Peri-Peri Chicken Livers', price:90,  desc:'Pan-fried in onion, garlic & sherry in a creamy peri-peri sauce, served with toast.',tags:['spicy'],note:'Plain available · Add chips +R35'},
+      {id:'b7', name:'The Full Stonehouse',       price:135, desc:'2 eggs, grilled mushrooms, grilled tomato, 2 pork sausages, 2 rashers of bacon & toast.',tags:['popular']},
+      {id:'b8', name:'Cheese Griller Breakfast', price:105, desc:'2 eggs, cheese griller, 2 rashers bacon, grilled tomato & toast.',tags:[]},
+      {id:'b9', name:'Hash Brown Breakfast',      price:105, desc:'2 eggs, 2 rashers bacon, 2 golden hash browns, grilled tomato & toast.',tags:[]},
+      {id:'b10',name:'French Toast',             price:85,  desc:'2 slices egged bread topped with bacon, grilled banana & golden syrup.',tags:['popular']},
+      {id:'b11',name:'Breakfast Croissant',       price:100, desc:'Scrambled eggs, bacon and cheese.',tags:[]},
+      {id:'b12',name:'Salmon Croissant',          price:175, desc:'Smoked salmon & cream cheese with rocket and scrambled egg.',tags:[]},
+      {id:'b13',name:'Fruit Bowl',                price:75,  desc:'Seasonal fruit, muesli, trail mix & greek yoghurt.',tags:['v']},
+    ]}
+  ]},
+  {key:'waffles',name:'Waffles',icon:'🧇',desc:'Home-made, served fresh',
+   sub:[
+    {label:'Sweet Waffles',items:[
+      {id:'w1',name:'Classic',         price:50,desc:'Served with ice-cream or cream.',tags:['v']},
+      {id:'w2',name:'Salted Caramel',  price:70,desc:'Served with ice-cream or cream.',tags:['v','popular']},
+      {id:'w3',name:'Chocolate',       price:70,desc:'Served with ice-cream or cream.',tags:['v']},
+      {id:'w4',name:'Bar One',         price:70,desc:'Served with ice-cream or cream.',tags:['v','popular']},
+      {id:'w5',name:'Peppermint Crisp',price:70,desc:'Served with ice-cream or cream.',tags:['v']},
+      {id:'w6',name:'Milky Bar',       price:70,desc:'Served with ice-cream or cream.',tags:['v']},
+    ]},
+    {label:'Savoury Waffles',items:[
+      {id:'sw1',name:'Bacon, Banana & Syrup',      price:80, desc:'Crispy bacon, grilled banana & golden syrup.',tags:[]},
+      {id:'sw2',name:'Bacon, Feta & Smashed Avo',  price:100,desc:'With danish feta, smashed avo & balsamic glaze.',tags:[]},
+    ]}
+  ]},
+  {key:'burgers',name:'Burgers',icon:'🍔',desc:'200g hand pressed — served with chips or salad',
+   sub:[
+    {label:null,items:[
+      {id:'bu1',name:'Cheese & Pineapple',        price:135,desc:'200g beef / chicken / crumbed veg patty. Burger sauce, lettuce, tomato, gherkins, onion rings & chips or salad.',tags:['v']},
+      {id:'bu2',name:'Bacon Jam, Cheese & Jalapeño',price:135,desc:"Chef's choice. 200g beef or chicken. Burger sauce, lettuce, tomato, gherkins, onion rings & chips or salad.",tags:['spicy','popular']},
+      {id:'bu3',name:'Bacon & Cheese',            price:135,desc:'200g beef or chicken. Burger sauce, lettuce, tomato, gherkins, onion rings & chips or salad.',tags:[]},
+      {id:'bu4',name:'The Mighty Stonehouse Stack',price:215,desc:'2×200g patties, avo, bacon, bacon jam, 2× cheese, jalapeño & fried egg. The full works!',tags:['popular']},
+    ]},
+    {label:'Add a Sauce',items:[
+      {id:'sa1',name:'Peri Peri',   price:30,desc:'',tags:['spicy']},
+      {id:'sa2',name:'Cheese',      price:30,desc:'',tags:[]},
+      {id:'sa3',name:'Pepper',      price:35,desc:'',tags:[]},
+      {id:'sa4',name:'Mushroom',    price:35,desc:'',tags:[]},
+      {id:'sa5',name:'Garlic',      price:30,desc:'',tags:[]},
+      {id:'sa6',name:'Peppadew & Feta',price:30,desc:'',tags:[]},
+    ]}
+  ]},
+  {key:'cocktails',name:'Cocktails',icon:'🍹',desc:'Shaken, stirred & frozen',
+   sub:[
+    {label:'Classics',items:[
+      {id:'c1',name:'Extra Long Island Iced Tea',price:115,desc:'Vodka, rum, tequila, triple sec & gin with lemon juice and cola.',tags:['popular']},
+      {id:'c2',name:'Espresso Martini',          price:95, desc:'Vodka, Kahlua and double espresso — shaken over ice.',tags:['popular']},
+      {id:'c3',name:'Mojito',                    price:85, desc:'Fresh mint, muddled limes and white rum, topped with soda water.',tags:[]},
+      {id:'c4',name:'Tipo Tinto R&R',            price:70, desc:'Tipo Tinto rum, raspberry soda, crushed ice & mint.',tags:[]},
+      {id:'c5',name:'Margarita',                 price:85, desc:'Tequila, triple sec and lime in a salt-rimmed glass.',tags:[]},
+      {id:'c6',name:'Cosmopolitan',              price:75, desc:'Cranberry, orange, lime, triple sec and vodka.',tags:[]},
+    ]},
+    {label:'Frozen',items:[
+      {id:'fc1',name:'Strawberry Daiquiri',price:90,desc:'Vodka, white rum & strawberry coulis blended with ice.',tags:['popular']},
+      {id:'fc2',name:'Pink Lemonade & Gin',price:90,desc:'Gin, lemonade and pink berries blended with ice.',tags:[]},
+      {id:'fc3',name:'Mango Daiquiri',     price:90,desc:'Mango coulis, vodka and white rum blended with ice.',tags:[]},
+    ]}
+  ]},
+  {key:'gin',name:'Gin Corner',icon:'🌿',desc:'Crafted G&Ts',
+   sub:[
+    {label:null,items:[
+      {id:'g1',name:'Grapefruit & Rosemary G&T',price:70,desc:'Fresh pink grapefruit and rosemary in a classic G&T.',tags:[]},
+      {id:'g2',name:'Mixed Berry G&T',           price:75,desc:'Mixed berries with pink tonic.',tags:['popular']},
+      {id:'g3',name:'Cucumber & Mint G&T',       price:70,desc:'British botanicals — refreshing, light and summery.',tags:[]},
+    ]}
+  ]},
+  {key:'wine',name:'Wine',icon:'🍷',desc:'Rosé · White · Red · Sparkling',
+   sub:[
+    {label:'Rosé',items:[
+      {id:'rw1',name:"Fairview Goats Do Roam Rosé",price:65,desc:'Glass. Rose water and strawberry notes.',tags:[]},
+      {id:'rw2',name:"Boplaas Moscato Rosé",       price:65,desc:'Glass. Gentle frizzante with citrus and raspberry.',tags:[]},
+    ]},
+    {label:'Sparkling',items:[
+      {id:'sp1',name:'Alvis Drift Brut Blanc De Blanc',price:300,desc:'Bottle. Fresh with zippy acidity.',tags:[]},
+      {id:'sp2',name:"Alvis Drift Brut Rosé",          price:300,desc:'Bottle. Apple, strawberry, watermelon & pomegranate.',tags:[]},
+      {id:'sp3',name:'Weltevrede Nectar',               price:395,desc:'Bottle. 100% Chardonnay demi-sec. Robertson Valley.',tags:[]},
+    ]},
+    {label:'White',items:[
+      {id:'ww1',name:'Van Loveren Sauvignon Blanc',  price:60, desc:'Glass. Aromatic with melon and fig.',tags:[]},
+      {id:'ww2',name:'Anura Sauvignon Blanc',         price:200,desc:'Bottle. Mineral, grassy, green fig with grapefruit.',tags:[]},
+      {id:'ww3',name:'Anura Pinot Grigio',            price:70, desc:'Glass. Ripe fruit, honey & spice.',tags:[]},
+      {id:'ww4',name:'Alvis Drift Chenin Blanc',      price:65, desc:'Glass. White peach, blossoms and citrus.',tags:[]},
+      {id:'ww5',name:'Boplaas Moscato Frizzante',     price:65, desc:'Glass. Sweet, fresh & fruity.',tags:[]},
+      {id:'ww6',name:'Hartenberg Unwooded Chardonnay',price:210,desc:'Bottle. Ripe fig, juicy pear & elderflower.',tags:[]},
+      {id:'ww7',name:'Weltevrede Vanilla Chardonnay', price:195,desc:'Bottle. Lime and peaches with a vanilla finish.',tags:[]},
+    ]},
+    {label:'Red',items:[
+      {id:'red1',name:'Van Loveren Merlot',       price:70, desc:'Glass. Soft strawberry notes, rich palate.',tags:[]},
+      {id:'red2',name:'Goats Do Roam Red',        price:65, desc:'Glass. Red cherries, wild berries & spice.',tags:[]},
+      {id:'red3',name:'Anura Legato',             price:185,desc:'Bottle. Merlot & Cabernet Sauvignon blend.',tags:[]},
+      {id:'red4',name:'Hartenberg Cabernet Shiraz',price:240,desc:'Bottle. Black fruits & fine tannins. Luxurious finish.',tags:[]},
+      {id:'red5',name:'Diemersfontein Pinotage',  price:320,desc:'Bottle. Coffee-chocolate pinotage. Dark & bold.',tags:['popular']},
+    ]}
+  ]},
+  {key:'beer',name:'Beer & Cider',icon:'🍺',desc:'Local & international',
+   sub:[
+    {label:'Ciders',items:[
+      {id:'ci1',name:'Savanna Dry', price:45,desc:'Crisp dry cider.',tags:[]},
+      {id:'ci2',name:"Hunters Gold",price:45,desc:'Smooth golden cider.',tags:[]},
+    ]},
+    {label:'Beers',items:[
+      {id:'be1',name:'Castle Lite',      price:35,desc:'Light lager.',tags:[]},
+      {id:'be2',name:'Black Label',      price:36,desc:'Classic South African lager.',tags:[]},
+      {id:'be3',name:'Jack Black',       price:45,desc:'Craft lager.',tags:[]},
+      {id:'be4',name:'Heineken',         price:45,desc:'International premium lager.',tags:[]},
+      {id:'be5',name:'Windhoek Draught', price:40,desc:'Namibian draught lager.',tags:[]},
+      {id:'be6',name:'Heineken 0%',      price:45,desc:'Non-alcoholic lager.',tags:[]},
+      {id:'be7',name:'Flying Fish',      price:40,desc:'Flavoured beer.',tags:[]},
+      {id:'be8',name:'Hansa',            price:30,desc:'Classic South African lager.',tags:[]},
+    ]},
+    {label:'Spirits',items:[
+      {id:'spi1',name:'Klipdrift Brandy',price:25,desc:'',tags:[]},
+      {id:'spi2',name:'Jameson Whiskey', price:36,desc:'',tags:[]},
+      {id:'spi3',name:'Amarula',         price:20,desc:'',tags:[]},
+      {id:'spi4',name:'Kahlua',          price:30,desc:'',tags:[]},
+    ]}
+  ]},
+  {key:'coffee',name:'Coffee',icon:'☕',desc:'Award-winning Manna Brew',
+   sub:[
+    {label:'Espresso Bar',items:[
+      {id:'co1', name:'Espresso',        price:30,desc:'Single shot.',tags:[]},
+      {id:'co2', name:'Cappuccino',       price:35,desc:'Small, regular or large.',tags:['popular']},
+      {id:'co3', name:'Flat White',       price:40,desc:'Double ristretto with steamed micro-foam milk.',tags:['popular']},
+      {id:'co4', name:'Latte',            price:45,desc:'Espresso with steamed milk.',tags:[]},
+      {id:'co5', name:'Americano',        price:35,desc:'Espresso topped with hot water.',tags:[]},
+      {id:'co6', name:'Macchiato',        price:35,desc:'Espresso with a dash of milk foam.',tags:[]},
+      {id:'co7', name:'Cortado',          price:35,desc:'Equal parts espresso and steamed milk.',tags:[]},
+      {id:'co8', name:'Mocha',            price:50,desc:'Espresso with chocolate and steamed milk.',tags:[]},
+      {id:'co9', name:'Milky Bar Mocha',  price:60,desc:'White chocolate mocha. Decadently indulgent.',tags:['popular']},
+      {id:'co10',name:'Dirty Chai',       price:50,desc:'Chai latte with a shot of espresso.',tags:[]},
+      {id:'co11',name:'Iced Coffee',      price:55,desc:'Cold coffee over ice.',tags:[]},
+      {id:'co12',name:'Iced Latte',       price:45,desc:'Espresso and cold milk over ice.',tags:[]},
+    ]},
+    {label:'Warm Drinks',items:[
+      {id:'wd1',name:'Red Cappuccino',         price:34,desc:'Rooibos-based. Caffeine-free.',tags:[]},
+      {id:'wd2',name:'Hot Chocolate',          price:40,desc:'Rich and creamy.',tags:[]},
+      {id:'wd3',name:'White Hot Chocolate',    price:40,desc:'Creamy white chocolate.',tags:[]},
+      {id:'wd4',name:'Milky Bar Hot Chocolate',price:45,desc:'Pure indulgence.',tags:['popular']},
+      {id:'wd5',name:'Chai Latte',             price:45,desc:'Spiced tea with steamed milk.',tags:[]},
+      {id:'wd6',name:'Malt',                   price:50,desc:'Warm malted milk drink.',tags:[]},
+      {id:'wd7',name:'Ceylon Tea',             price:30,desc:'Classic black tea.',tags:['v']},
+      {id:'wd8',name:'Rooibos Tea',            price:30,desc:'South African herbal rooibos.',tags:['v']},
+      {id:'wd9',name:'Earl Grey Tea',          price:30,desc:'Fragrant bergamot.',tags:['v']},
+      {id:'wd10',name:'Green Tea',             price:30,desc:'Light and delicate.',tags:['v']},
+    ]},
+    {label:'Extras',items:[
+      {id:'ex1',name:'Decaf Coffee',    price:12,desc:'',tags:[]},
+      {id:'ex2',name:'Dairy Free Milk', price:15,desc:'Almond, soya or macadamia.',tags:['v']},
+      {id:'ex3',name:'Flavour Shot',    price:12,desc:'Hazelnut, caramel, vanilla or pumpkin spice.',tags:[]},
+    ]}
+  ]},
+  {key:'milkshakes',name:'Milkshakes',icon:'🥤',desc:'Classic, gourmet & boozy',
+   sub:[
+    {label:'Plain — R50',items:[
+      {id:'ms1',name:'Plain Milkshake',     price:50,desc:'Vanilla, strawberry, lime, chocolate, bubblegum or banana.',tags:[]},
+      {id:'ms2',name:'Dairy Free Milkshake',price:70,desc:'Vanilla, strawberry, lime, chocolate, bubblegum or banana.',tags:['v']},
+    ]},
+    {label:'Gourmet — R80',items:[
+      {id:'gm1',name:'Gourmet Milkshake',price:80,desc:'Oreo, salted caramel, peppermint crisp, peanut butter, hazelnut, milky bar, cappuccino, milo, chai, bar one or malt.',tags:['popular']},
+    ]},
+    {label:'Boozy Milkshakes',items:[
+      {id:'bm1',name:'Peppermint Crisp & Vodka',price:95,desc:'Peppermint with a double shot of vodka.',tags:[]},
+      {id:'bm2',name:'Cappuccino & Kahlua',     price:95,desc:'Cappuccino with a double shot of Kahlua.',tags:[]},
+      {id:'bm3',name:'Vanilla & Amarula',       price:85,desc:'Vanilla with a double shot of Amarula.',tags:['popular']},
+      {id:'bm4',name:'Chocolate & Whisky',      price:95,desc:'Chocolate with a double shot of whisky.',tags:[]},
+    ]},
+    {label:'Dom Pedros',items:[
+      {id:'dp1',name:'Dom Pedro: Amarula',price:65,desc:'Classic dom pedro with Amarula.',tags:['popular']},
+      {id:'dp2',name:'Dom Pedro: Kahlua', price:75,desc:'Dom pedro with Kahlua.',tags:[]},
+      {id:'dp3',name:'Dom Pedro: Whisky', price:70,desc:'Dom pedro with whisky.',tags:[]},
+    ]}
+  ]},
+  {key:'sweet',name:'Something Sweet',icon:'🍰',desc:'Desserts & sweet treats',
+   sub:[
+    {label:null,items:[
+      {id:'ss1',name:'Fruit Salad',       price:80,desc:'Seasonal fruit served with ice-cream.',tags:['v']},
+      {id:'ss2',name:'Chocolate Brownie', price:80,desc:'Served with ice-cream or cream.',tags:['v','popular']},
+      {id:'ss3',name:'Scones',            price:55,desc:'Jam & cream, or cheese & jam.',tags:['v']},
+      {id:'ss4',name:'Irish Coffee',      price:75,desc:'Coffee with a double shot of whiskey.',tags:[]},
+      {id:'ss5',name:'Kahlua Coffee',     price:80,desc:'Coffee with Kahlua liqueur.',tags:[]},
+    ]},
+    {label:'Gluten Free',items:[
+      {id:'gf1',name:'GF Waffle',           price:80,desc:'Gluten-free waffle with cream.',tags:['v']},
+      {id:'gf2',name:'GF Chocolate Brownie',price:80,desc:'Gluten-free brownie with cream.',tags:['v']},
+    ]}
+  ]},
+  {key:'kids',name:"Kids' Favourites",icon:'🧒',desc:'Little ones welcome · #GoodForKids',
+   sub:[
+    {label:'Mains',items:[
+      {id:'k1',name:'Kids French Toast',   price:35,desc:'Plain with syrup. Add bacon & syrup for R45.',tags:[]},
+      {id:'k2',name:'Kids Breakfast',      price:45,desc:'Fried or scrambled egg, bacon & toast.',tags:[]},
+      {id:'k3',name:'Kids Ribs 200g',      price:85,desc:'Served with chips.',tags:[]},
+      {id:'k4',name:'Kids Chicken Strips', price:60,desc:'Served with chips.',tags:[]},
+      {id:'k5',name:'Kids Chicken Pops',   price:60,desc:'Served with chips.',tags:[]},
+      {id:'k6',name:'Kids Burger',         price:85,desc:'Chicken or beef, served with chips.',tags:[]},
+      {id:'k7',name:'Kids Cheese Griller', price:60,desc:'Served with chips.',tags:[]},
+    ]},
+    {label:'Kids Pizza',items:[
+      {id:'kp1',name:'Margherita',      price:55,desc:'',tags:['v']},
+      {id:'kp2',name:'Bacon & Cheese',  price:60,desc:'',tags:[]},
+      {id:'kp3',name:'Ham & Cheese',    price:60,desc:'',tags:[]},
+      {id:'kp4',name:'Ham & Pineapple', price:60,desc:'',tags:[]},
+      {id:'kp5',name:'Chicken & Cheese',price:65,desc:'',tags:[]},
+      {id:'kp6',name:'BBQ Chicken',     price:65,desc:'',tags:[]},
+    ]},
+    {label:'Kids Waffles',items:[
+      {id:'kw1',name:'Classic Waffle',price:40,desc:'Served with ice-cream.',tags:['v']},
+      {id:'kw2',name:'Bar One Waffle',price:50,desc:'Served with ice-cream.',tags:['v']},
+    ]},
+    {label:'Kids Drinks',items:[
+      {id:'kd1',name:'Kids Milkshake',        price:40,desc:'Vanilla, strawberry, lime, chocolate, bubblegum or banana. Dairy-free option available.',tags:[]},
+      {id:'kd2',name:'Kids Gourmet Milkshake',price:55,desc:'Oreo, salted caramel, peppermint crisp, peanut butter, hazelnut and more.',tags:[]},
+      {id:'kd3',name:'Kids Hot Chocolate',    price:35,desc:'Rich and creamy.',tags:[]},
+      {id:'kd4',name:'Kids White Hot Choc',   price:35,desc:'',tags:[]},
+      {id:'kd5',name:'Kids Freezo',           price:40,desc:'Mixed berry, raspberry, strawberry, pink lemonade, bar one, milky bar, mango & more.',tags:[]},
+      {id:'kd6',name:'Juice Box',             price:25,desc:'100% fruit juice box.',tags:[]},
+    ]}
+  ]},
+  {key:'drinks',name:'Cold Drinks',icon:'🥤',desc:'Refreshing cold drinks',
+   sub:[
+    {label:'Chilled',items:[
+      {id:'d1',name:'Steel Works',           price:55,desc:'Refreshing house cold drink.',tags:[]},
+      {id:'d2',name:'Rock Shandy',           price:55,desc:'Lemonade and soda water.',tags:[]},
+      {id:'d3',name:'Ice Tea 300ml',         price:30,desc:'Lemon or peach.',tags:[]},
+      {id:'d4',name:'Fruit Juices',          price:45,desc:'Orange, cranberry, mango or fruit cocktail.',tags:[]},
+      {id:'d5',name:'Soda 300ml',            price:30,desc:'Coke, Coke Zero, Sprite, Sprite Zero, Sparberry, Fanta Orange or Cream Soda.',tags:[]},
+      {id:'d6',name:'Appletizer / Grapetizer',price:40,desc:'Sparkling apple or grape juice.',tags:[]},
+      {id:'d7',name:'Freezo',               price:60,desc:'Mixed berry, raspberry, strawberry, pink lemonade, bar one, milky bar, mango, coffee & more.',tags:['popular']},
+      {id:'d8',name:'Froyo',                price:70,desc:'Fruit coulis blended with greek yoghurt. Mixed berry, strawberry or mango.',tags:['v']},
+    ]},
+    {label:'Water',items:[
+      {id:'d9', name:'Still Water 500ml',    price:25,desc:'',tags:[]},
+      {id:'d10',name:'Sparkling Water 500ml',price:25,desc:'',tags:[]},
+      {id:'d11',name:'Still Water 1L',       price:40,desc:'',tags:[]},
+      {id:'d12',name:'Sparkling Water 1L',   price:40,desc:'',tags:[]},
+    ]},
+    {label:'Cordials',items:[
+      {id:'d13',name:'Cordial',         price:15,desc:'Lime, passion fruit or kola tonic.',tags:[]},
+      {id:'d14',name:'Soda Cordial 200ml',price:30,desc:'With soda.',tags:[]},
+      {id:'d15',name:'Lemonade Cordial 200ml',price:30,desc:'With lemonade.',tags:[]},
+    ]}
+  ]},
+];
+
+/* ═══════════════════════════════════════════════
+   APP
+═══════════════════════════════════════════════ */
+const APP = (function(){
+
+  // ── State ──────────────────────────────────
+  let cart = {};
+  let currentSection = null;
+  let searchQ = '';
+  let toastTimer = null;
+
+  // ── Helpers ────────────────────────────────
+  function findItem(id){
+    for(const s of SECTIONS) for(const sub of s.sub){
+      const f = sub.items.find(i=>i.id===id);
+      if(f) return f;
+    }
+    return null;
+  }
+
+  function cartCount(){
+    return Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  }
+
+  function cartTotal(){
+    return Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);
+  }
+
+  function fmt(n){ return 'R'+n.toFixed(2); }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = '✓ '+msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'),1800);
+  }
+
+  // ── Page switching ─────────────────────────
+  function showPage(key){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const pg = document.getElementById('page-'+key);
+    if(pg) pg.classList.add('active');
+  }
+
+  function activateTab(key){
+    document.querySelectorAll('.tb-item').forEach(t=>t.classList.remove('active'));
+    const tb = document.getElementById('tab-'+key);
+    if(tb) tb.classList.add('active');
+  }
+
+  function updateBadge(){
+    const n = cartCount();
+    const b = document.getElementById('cartBadge');
+    b.textContent = n;
+    b.classList.toggle('show', n>0);
+  }
+
+  // ── Cover ──────────────────────────────────
+  function openMenu(){
+    document.getElementById('coverPage').style.display='none';
+    document.getElementById('app').classList.add('open');
+    renderCategoryGrid();
+  }
+
+  // ── Home ───────────────────────────────────
+  function renderCategoryGrid(){
+    const grid = document.getElementById('catGrid');
+    grid.innerHTML = SECTIONS.map(s=>{
+      const total = s.sub.reduce((n,sub)=>n+sub.items.length,0);
+      return `<button class="cat-card" onclick="APP.openSection('${s.key}')">
+        <div class="cat-emoji">${s.icon}</div>
+        <div class="cat-name">${s.name}</div>
+        <div class="cat-count">${total} items</div>
+      </button>`;
+    }).join('');
+  }
+
+  function goHome(){
+    showPage('home');
+    activateTab('home');
+    document.getElementById('tab-section').style.display='none';
+  }
+
+  // ── Section ────────────────────────────────
+  function openSection(key){
+    currentSection = SECTIONS.find(s=>s.key===key);
+    if(!currentSection) return;
+
+    searchQ = '';
+    const si = document.getElementById('searchInput');
+    if(si) si.value='';
+
+    document.getElementById('secTitle').textContent = currentSection.name;
+    document.getElementById('secIcon').textContent = currentSection.icon;
+
+    const tabSec = document.getElementById('tab-section');
+    document.getElementById('tab-sec-icon').textContent = currentSection.icon;
+    document.getElementById('tab-sec-label').textContent = currentSection.name.split(' ')[0];
+    tabSec.style.display='flex';
+
+    renderSection();
+    showPage('section');
+    activateTab('section');
+  }
+
+  function renderSection(){
+    if(!currentSection){ document.getElementById('sectionBody').innerHTML=''; return; }
+
+    const body = document.getElementById('sectionBody');
+    let html = `<div class="section-hero">
+      <h1>${currentSection.name}</h1>
+      ${currentSection.desc?`<p>${currentSection.desc}</p>`:''}
+      <div class="section-rule"><span></span><i>◆</i><span></span></div>
+    </div>`;
+
+    let hasAny = false;
+
+    for(const sub of currentSection.sub){
+      const filtered = searchQ
+        ? sub.items.filter(i=>i.name.toLowerCase().includes(searchQ)||i.desc.toLowerCase().includes(searchQ))
+        : sub.items;
+
+      if(searchQ && filtered.length===0) continue;
+      hasAny = true;
+
+      if(sub.label){
+        html += `<div class="section-divider"></div><div class="sub-label">${sub.label}</div>`;
+      }
+      for(const item of filtered){
+        html += buildRow(item);
+      }
+    }
+
+    if(searchQ && !hasAny){
+      html += `<div class="no-results"><h3>No results for "${searchQ}"</h3><p>Try a different search term</p></div>`;
+    }
+
+    body.innerHTML = html;
+  }
+
+  // FIX: build full row HTML without relying on outerHTML patching
+  function buildRow(item){
+    const qty = cart[item.id]?.qty||0;
+    const inCart = qty>0;
+    const tags = item.tags.map(t=>{
+      if(t==='v')       return '<span class="tag tag-v">V</span>';
+      if(t==='popular') return '<span class="tag tag-popular">★</span>';
+      if(t==='spicy')   return '<span class="tag tag-spicy">🌶</span>';
+      return '';
+    }).join('');
+
+    const ctrlHtml = qty>0
+      ? `<div class="qty-ctrl">
+          <button class="qbtn" onclick="APP.qty('${item.id}',-1,event)">−</button>
+          <span class="qnum">${qty}</span>
+          <button class="qbtn add" onclick="APP.qty('${item.id}',1,event)">+</button>
+         </div>`
+      : `<div class="qty-ctrl">
+          <button class="qbtn add" onclick="APP.qty('${item.id}',1,event)">+</button>
+         </div>`;
+
+    return `<div class="mrow${inCart?' in-cart':''}" id="mrow-${item.id}">
+      <div class="mrow-body">
+        <div class="mrow-name-line">
+          <span class="mrow-name">${item.name}</span>
+          ${tags}
+        </div>
+        ${item.desc?`<div class="mrow-desc">${item.desc}</div>`:''}
+        ${item.note?`<div class="mrow-note">ℹ ${item.note}</div>`:''}
+      </div>
+      <div class="mrow-right">
+        <div class="mrow-price">${fmt(item.price)}</div>
+        <div id="ctrl-${item.id}">${ctrlHtml}</div>
+      </div>
+    </div>`;
+  }
+
+  // FIX: update only the ctrl container innerHTML, not outerHTML
+  function patchRowCtrl(id){
+    const ctrl = document.getElementById('ctrl-'+id);
+    if(!ctrl) return;
+    const qty = cart[id]?.qty||0;
+    // Also patch row class
+    const row = document.getElementById('mrow-'+id);
+    if(row) row.classList.toggle('in-cart', qty>0);
+    if(row){
+      const nm = row.querySelector('.mrow-name');
+      if(nm) nm.style.color = qty>0 ? 'var(--green)' : '';
+    }
+    ctrl.innerHTML = qty>0
+      ? `<div class="qty-ctrl">
+          <button class="qbtn" onclick="APP.qty('${id}',-1,event)">−</button>
+          <span class="qnum">${qty}</span>
+          <button class="qbtn add" onclick="APP.qty('${id}',1,event)">+</button>
+         </div>`
+      : `<div class="qty-ctrl">
+          <button class="qbtn add" onclick="APP.qty('${id}',1,event)">+</button>
+         </div>`;
+  }
+
+  // ── Qty ────────────────────────────────────
+  function qty(id, delta, event){
+    if(event){ event.preventDefault(); event.stopPropagation(); }
+    const item = findItem(id);
+    if(!item) return;
+
+    if(!cart[id]) cart[id]={...item,qty:0};
+    cart[id].qty = Math.max(0, cart[id].qty+delta);
+    if(cart[id].qty===0) delete cart[id];
+
+    if(delta>0) showToast(item.name+' added');
+
+    patchRowCtrl(id);   // FIX: safe patch
+    updateBadge();
+
+    // If order page is open, re-render it
+    if(document.getElementById('page-order').classList.contains('active')){
+      renderOrderPage();
+    }
+  }
+
+  // ── Order Page ─────────────────────────────
+  function renderOrderPage(){
+    const items = Object.values(cart);
+    const count = cartCount();
+    const total = cartTotal();
+
+    document.getElementById('orderCountLabel').textContent = count>0 ? `${count} item${count!==1?'s':''}` : '';
+
+    const wrap = document.getElementById('orderWrap');
+
+    if(items.length===0){
+      wrap.innerHTML=`<div class="order-empty">
+        <div class="order-empty-icon">🛒</div>
+        <h3>Your order is empty</h3>
+        <p>Browse the menu and add your favourite items.</p>
+        <button class="btn-ghost" onclick="APP.goHome()">Browse Menu</button>
+      </div>`;
+      return;
+    }
+
+    wrap.innerHTML=`
+      <div class="save-form-card">
+        <div class="save-form-title">Save Your Order Details</div>
+        <div class="form-row">
+          <label class="form-label">Your Name</label>
+          <input class="form-input" id="guestName" type="text" placeholder="e.g. Sarah" maxlength="40" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Table Number</label>
+          <input class="form-input" id="tableNum" type="text" placeholder="e.g. 5" maxlength="10" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Special Requests</label>
+          <input class="form-input" id="specialReq" type="text" placeholder="Allergies, preferences…" maxlength="100" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="order-lines-card">
+        ${items.map(item=>`
+          <div class="order-line">
+            <div class="ol-info">
+              <div class="ol-name">${item.name}</div>
+              <div class="ol-unit">${fmt(item.price)} each</div>
+            </div>
+            <div class="qty-ctrl">
+              <button class="qbtn" onclick="APP.qty('${item.id}',-1)">−</button>
+              <span class="qnum">${item.qty}</span>
+              <button class="qbtn add" onclick="APP.qty('${item.id}',1)">+</button>
+            </div>
+            <div class="ol-sub">${fmt(item.price*item.qty)}</div>
+          </div>`).join('')}
+      </div>
+
+      <div class="totals-card">
+        <div class="total-row"><span>Subtotal (${count} item${count!==1?'s':''})</span><span>${fmt(total)}</span></div>
+        <div class="total-grand"><span>Total</span><span>${fmt(total)}</span></div>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn-primary" onclick="APP.placeOrder()">Place Order →</button>
+        <button class="btn-danger" onclick="APP.clearOrder()">🗑 Clear Entire Order</button>
+      </div>`;
+  }
+
+  // ── Clear Order ────────────────────────────
+  function clearOrder(){
+    if(!Object.keys(cart).length) return;
+    if(!confirm('Clear your entire order?')) return;
+    cart = {};
+    updateBadge();
+    // Re-render section if open
+    if(currentSection && document.getElementById('page-section').classList.contains('active')){
+      renderSection();
+    }
+    renderOrderPage();
+    showToast('Order cleared');
+  }
+
+  // ── Place Order ────────────────────────────
+  function placeOrder(){
+    const items = Object.values(cart);
+    if(!items.length) return;
+
+    // Grab form values safely
+    const gName = (document.getElementById('guestName')?.value||'').trim();
+    const tNum  = (document.getElementById('tableNum')?.value||'').trim();
+    const sReq  = (document.getElementById('specialReq')?.value||'').trim();
+
+    const total = cartTotal();
+    const count = cartCount();
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-ZA',{day:'2-digit',month:'short',year:'numeric'});
+    const timeStr = now.toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'});
+    const orderNo = 'SH-'+Math.floor(1000+Math.random()*9000);
+
+    const customerLine = [gName&&`Name: ${gName}`, tNum&&`Table: ${tNum}`].filter(Boolean).join(' &nbsp;·&nbsp; ');
+    const reqLine = sReq ? `<div style="font-size:11px;color:var(--ink3);margin-top:4px;font-style:italic;font-family:'Inter',sans-serif;">Note: ${sReq}</div>` : '';
+
+    document.getElementById('receiptWrap').innerHTML=`
+      <div class="receipt-paper">
+        <div class="receipt-foil"></div>
+        <div class="receipt-head">
+          <div class="r-logo">Stone<em>house</em></div>
+          <span class="r-est">The Café · Hillcrest · Est. 2019</span>
+          <div class="r-divider"></div>
+          <div class="r-order-no">${orderNo}</div>
+          <div class="r-datetime">${dateStr} · ${timeStr}</div>
+          ${customerLine?`<div class="r-customer">${customerLine}</div>`:''}
+          ${reqLine}
+        </div>
+
+        <div class="receipt-items">
+          <div class="r-col-head"><span>Item</span><span>Qty</span><span>Amount</span></div>
+          ${items.map(i=>`
+            <div class="r-item">
+              <div class="r-iname">${i.name}</div>
+              <div class="r-iqty">×${i.qty}</div>
+              <div class="r-iamt">${fmt(i.price*i.qty)}</div>
+            </div>`).join('')}
+        </div>
+
+        <div class="receipt-total">
+          <div class="r-trow"><span>${count} item${count!==1?'s':''}</span><span>${fmt(total)}</span></div>
+          <div class="r-grand"><span>Total</span><span>${fmt(total)}</span></div>
+        </div>
+
+        <div class="receipt-foot">
+          <p>Thank you for dining with us.<br>We look forward to seeing you again!</p>
+          <span class="receipt-hashtag">#GOODFORKIDS · #SERVICEWITHSMILE</span>
+        </div>
+      </div>
+      <div class="receipt-tear"></div>
+
+      <div class="counter-box">
+        <div class="cb-icon">🧾</div>
+        <h3>Please take your order to the counter</h3>
+        <p>Show this slip to our team and confirm your order.<br>We'll get it started right away!</p>
+      </div>
+
+      <button class="btn-new-order" onclick="APP.newOrder()">Start New Order</button>`;
+
+    showPage('receipt');
+    document.querySelectorAll('.tb-item').forEach(t=>t.classList.remove('active'));
+  }
+
+  // ── New Order ──────────────────────────────
+  function newOrder(){
+    cart={};
+    updateBadge();
+    if(currentSection) renderSection();
+    goHome();
+  }
+
+  // ── Tab ────────────────────────────────────
+  function tab(key, btn){
+    if(key==='order') renderOrderPage();
+    if(key==='section' && !currentSection){ goHome(); return; }
+    showPage(key);
+    document.querySelectorAll('.tb-item').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // ── Search ─────────────────────────────────
+  function search(val){
+    searchQ = val.toLowerCase().trim();
+    renderSection();
+  }
+
+  // ── Init ───────────────────────────────────
+  function init(){
+    // nothing needed on load
+  }
+
+  // ── Public API ─────────────────────────────
+  return { openMenu, goHome, openSection, qty, clearOrder, placeOrder, newOrder, tab, search, init };
+
+})();
+
+// Run
+APP.init();
+</script>
+</body>
+</html>
